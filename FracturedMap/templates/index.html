@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rotated Image with Coordinate System</title>
     <style>
-        .canvas-container {
+        #canvas-container {
             position: relative;
-            width: 1700px;
-            height: 900px;
+            width: 100%;
+            height: 97vh; /* if @ 100vh the bot scroll bar is half hidden*/
             overflow: auto;
         }
         .canvas {
@@ -25,14 +25,14 @@
         #coordinates {
             position: fixed;
             top: 10px; /* Adjust as needed */
-            right: 10px; /* Adjust as needed */
+            right: 30px; /* Adjust as needed */
             padding: 10px;
             background-color: rgba(255, 255, 255, 0.7);
         }
     </style>
 </head>
 <body>
-    <div class="canvas-container">
+    <div id="canvas-container">
         <div class="canvas">
             <img id="map" src="{{ image_path }}" alt="Rotated Image">
         </div>
@@ -40,10 +40,21 @@
     <div id="coordinates"></div>
 
     <script>
+
+        //this centers the map on first load
+        document.addEventListener("DOMContentLoaded", centerContainer);
+        function centerContainer() {
+            var elm = document.getElementById('canvas-container');
+            var scrollBarWidth = elm.offsetWidth - elm.clientWidth;
+            var scrollBarHeight = elm.offsetHeight - elm.clientHeight;
+            elm.scrollTo((elm.scrollWidth - elm.clientWidth + scrollBarWidth) / 2, (elm.scrollHeight - elm.clientHeight + scrollBarHeight) / 2);
+        }
+
         // Define scale factor
         const scaleFactor = 1.6;
 
         document.addEventListener('DOMContentLoaded', function () {
+
             const map = document.querySelector('#map');
             const coordinatesElement = document.querySelector('#coordinates');
 
@@ -63,7 +74,7 @@
                 const scaledRotatedY = rotatedY * scaleFactor;
 
                 // Display the scaled coordinates
-                coordinatesElement.textContent = `Coordinates: (${scaledRotatedX.toFixed(2)}, ${scaledRotatedY.toFixed(2)})`;
+                coordinatesElement.textContent = `Coordinates: ${scaledRotatedY.toFixed(0)}W, ${scaledRotatedX.toFixed(0)}N`;
             }
 
             // Event listener for mousemove to update coordinates
