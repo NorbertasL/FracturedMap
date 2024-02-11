@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotated Image with Coordinate System</title>
+    <style>
+        .canvas-container {
+            position: relative;
+            width: 1700px;
+            height: 900px;
+            overflow: auto;
+        }
+        .canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: {{ image_width }}px;
+            height: {{ image_height }}px;
+            transform-origin: 0 0; /* Set the transform origin to the top-left corner */
+        }
+        img {
+            display: block;
+        }
+        #coordinates {
+            position: fixed;
+            top: 10px; /* Adjust as needed */
+            right: 10px; /* Adjust as needed */
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container">
+        <div class="canvas">
+            <img id="map" src="{{ image_path }}" alt="Rotated Image">
+        </div>
+    </div>
+    <div id="coordinates"></div>
+
+    <script>
+        // Define scale factor
+        const scaleFactor = 1.6;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const map = document.querySelector('#map');
+            const coordinatesElement = document.querySelector('#coordinates');
+
+            // Function to update coordinates display
+            function updateCoordinates(event) {
+                // Calculate coordinates relative to the center of the map
+                const offsetX = event.offsetX - map.offsetWidth / 2;
+                const offsetY = map.offsetHeight / 2 - event.offsetY;
+
+                // Rotate the coordinates by -45 degrees
+                const angle = -45 * Math.PI / 180;
+                const rotatedX = Math.cos(angle) * offsetX - Math.sin(angle) * offsetY;
+                const rotatedY = Math.sin(angle) * offsetX + Math.cos(angle) * offsetY;
+
+                // Scale the rotated coordinates
+                const scaledRotatedX = rotatedX * scaleFactor;
+                const scaledRotatedY = rotatedY * scaleFactor;
+
+                // Display the scaled coordinates
+                coordinatesElement.textContent = `Coordinates: (${scaledRotatedX.toFixed(2)}, ${scaledRotatedY.toFixed(2)})`;
+            }
+
+            // Event listener for mousemove to update coordinates
+            map.addEventListener('mousemove', updateCoordinates);
+        });
+    </script>
+</body>
+</html>
